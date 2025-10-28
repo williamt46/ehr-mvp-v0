@@ -9,21 +9,17 @@ import {
   Alert,
   ActivityIndicator,
   TouchableOpacity,
-  Platform, // <-- 1. IMPORT PLATFORM
+  Platform,
 } from 'react-native';
 import { Stack } from 'expo-router';
 
-import BlockchainAPI from '../MockBlockChainAPI.js';
+import BlockchainAPI, { AccessRequest, ActivePermission } from '../MockBlockChainAPI';
 
 // --- 2. NEW PLATFORM-AWARE ALERT FUNCTION ---
 // This wrapper checks the OS and uses the correct alert API.
 function showPlatformAlert(title: string, message: string, buttons?: any[]) {
   if (Platform.OS === 'web') {
-    // window.alert is the web equivalent for a simple "OK" alert.
-    // We combine the title and message.
     window.alert(`${title}\n\n${message}`);
-    // If buttons are provided (e.g., for 'OK' callbacks), find and execute the first one.
-    // This is a simple polyfill.
     if (buttons && buttons[0] && buttons[0].onPress) {
       buttons[0].onPress();
     }
@@ -33,11 +29,14 @@ function showPlatformAlert(title: string, message: string, buttons?: any[]) {
   }
 }
 
-// This is the refactored PatientPortal, now a "Dashboard"
+// PatientPortal Dashboard
 export default function PatientPortal() {
-  const [patientID, setPatientID] = useState('patient-123'); // Demo Patient
-  const [pendingRequests, setPendingRequests] = useState<any[]>([]);
-  const [activePermissions, setActivePermissions] = useState<any[]>([]);
+  const [patientID] = useState('patient-123'); // Demo Patient
+  
+  // --- 2. TYPED STATE ---
+  // Our state is no longer 'any[]', it's properly typed.
+  const [pendingRequests, setPendingRequests] = useState<AccessRequest[]>([]);
+  const [activePermissions, setActivePermissions] = useState<ActivePermission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -47,68 +46,68 @@ export default function PatientPortal() {
   const loadAccessRequests = async () => {
     setIsLoading(true);
     try {
+      // The API functions now return strongly-typed promises
       const [pending, active] = await Promise.all([
         BlockchainAPI.getPendingRequests(patientID),
         BlockchainAPI.getActivePermissions(patientID),
       ]);
       setPendingRequests(pending);
       setActivePermissions(active);
-    } catch (error: any) {
-      // --- 3. USE PLATFORM-AWARE ALERT ---
-      showPlatformAlert('Error', error.message || 'Failed to load data.');
+    } catch (error) {
+            // --- 3. USE PLATFORM-AWARE ALERT ---
+
+      showPlatformAlert('Error', (error as Error).message || 'Failed to load data.');
     }
     setIsLoading(false);
   };
 
-  // --- STUBBED FEATURE (a) ---
+  // Stubbed Features
   const onEditProfile = () => {
-    // --- 3. USE PLATFORM-AWARE ALERT ---
+        // --- 3. USE PLATFORM-AWARE ALERT ---
+
     showPlatformAlert(
       'Feature Stub',
       'This screen will allow the patient to view and edit their personal details (Req. 2a).'
     );
   };
 
-  // --- STUBBED FEATURE (c) ---
   const onViewDoctors = () => {
-    // --- 3. USE PLATFORM-AWARE ALERT ---
+        // --- 3. USE PLATFORM-AWARE ALERT ---
+
     showPlatformAlert(
       'Feature Stub',
       'This screen will show a directory of all available doctors and their profiles (Req. 2c).'
     );
   };
 
-  // --- EXISTING FEATURE (b) ---
+  // Core Access Features
   const handleAccessRequest = async (requestID: string, approved: boolean) => {
     try {
       await BlockchainAPI.respondToAccessRequest(requestID, approved, patientID);
-      // --- 3. USE PLATFORM-AWARE ALERT ---
       showPlatformAlert(
         'Success',
         approved ? 'Access granted' : 'Access denied',
-        [{ text: 'OK', onPress: loadAccessRequests }] // Reload data
+        [{ text: 'OK', onPress: loadAccessRequests }]
       );
-    } catch (error: any) {
-      // --- 3. USE PLATFORM-AWARE ALERT ---
-      showPlatformAlert('Error', error.message || 'An unknown error occurred.');
+    } catch (error) {
+      showPlatformAlert('Error', (error as Error).message || 'An unknown error occurred.');
     }
   };
-
   // --- 4. REFACTORED REVOKE FUNCTION (COMPLEX) ---
   const revokeAccess = (permissionID: string) => {
     const performRevoke = async () => {
       try {
         await BlockchainAPI.revokePermission(permissionID);
         showPlatformAlert('Success', 'Access has been revoked.', [
-          { text: 'OK', onPress: loadAccessRequests }, // Reload data
+          { text: 'OK', onPress: loadAccessRequests },
         ]);
-      } catch (error: any) {
-        showPlatformAlert('Error', error.message || 'Failed to revoke access.');
+      } catch (error) {
+        showPlatformAlert('Error', (error as Error).message || 'Failed to revoke access.');
       }
     };
 
     if (Platform.OS === 'web') {
-      // On web, we use window.confirm() which returns a simple boolean
+            // On web, we use window.confirm() which returns a simple boolean
       const userConfirmed = window.confirm(
         'Revoke Access?\n\nAre you sure you want to revoke this provider\'s access?'
       );
@@ -125,7 +124,7 @@ export default function PatientPortal() {
           {
             text: 'Revoke',
             style: 'destructive',
-            onPress: performRevoke, // Pass the function to onPress
+            onPress: performRevoke,// Pass the function to onPress
           },
         ]
       );
@@ -140,7 +139,7 @@ export default function PatientPortal() {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        {/* --- NEW FEATURE HUB (Req. 2a & 2c) --- */}
+        {/* Feature Hub(Req. 2a & 2c)*/}
         <View style={styles.featureHub}>
           <Text style={styles.sectionTitle}>My Dashboard</Text>
           <View style={styles.featureGrid}>
@@ -153,16 +152,17 @@ export default function PatientPortal() {
           </View>
         </View>
 
-        {/* --- EXISTING ACCESS MANAGEMENT (Req. 2b) --- */}
+        {/* Access Management (Req. 2b)*/}
         <View style={styles.accessSection}>
           <Text style={styles.sectionTitle}>Manage Access</Text>
           {isLoading ? (
             <ActivityIndicator size="large" color="#2563eb" />
           ) : (
             <>
-              {/* --- Pending Requests List --- */}
+              {/* Pending Requests List */}
               <Text style={styles.subSectionTitle}>Pending Requests</Text>
               {pendingRequests.length > 0 ? (
+                // TypeScript now knows 'item' is an 'AccessRequest'
                 pendingRequests.map((item) => (
                   <View key={item.requestID} style={styles.card}>
                     <View style={styles.cardContent}>
@@ -194,9 +194,10 @@ export default function PatientPortal() {
                 <Text style={styles.emptyText}>No pending requests.</Text>
               )}
 
-              {/* --- Active Permissions List --- */}
+              {/* Active Permissions List */}
               <Text style={styles.subSectionTitle}>Active Permissions</Text>
               {activePermissions.length > 0 ? (
+                // TypeScript now knows 'item' is an 'ActivePermission'
                 activePermissions.map((item) => (
                   <View key={item.permissionID} style={styles.card}>
                     <View style={styles.cardContent}>
@@ -228,10 +229,11 @@ export default function PatientPortal() {
 }
 
 // --- STYLESHEET ---
+// (No changes to styles)
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f1f5f9', // Light blue-gray background
+    backgroundColor: '#f1f5f9',
   },
   container: {
     flex: 1,
@@ -256,22 +258,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   featureButton: {
-    flex: 1, // Each button takes half the space
-    backgroundColor: '#e0e7ff', // Lighter blue
+    flex: 1,
+    backgroundColor: '#e0e7ff',
     paddingVertical: 16,
     paddingHorizontal: 8,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 4, // Gutter
+    marginHorizontal: 4,
   },
   featureButtonText: {
-    color: '#3730a3', // Darker blue
+    color: '#3730a3',
     fontWeight: '600',
     textAlign: 'center',
   },
   accessSection: {
-    // Wrapper for the access lists
   },
   sectionTitle: {
     fontSize: 22,
@@ -340,14 +341,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   approveButton: {
-    backgroundColor: '#2563eb', // Blue
+    backgroundColor: '#2563eb',
     borderBottomLeftRadius: 12,
   },
   approveButtonText: {
     color: '#ffffff',
   },
   denyButton: {
-    backgroundColor: '#e2e8f0', // Gray
+    backgroundColor: '#e2e8f0',
     borderLeftWidth: 1,
     borderLeftColor: '#f1f5f9',
     borderBottomRightRadius: 12,
@@ -356,7 +357,7 @@ const styles = StyleSheet.create({
     color: '#334155',
   },
   revokeButton: {
-    backgroundColor: '#dc2626', // Red
+    backgroundColor: '#dc2626',
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
   },

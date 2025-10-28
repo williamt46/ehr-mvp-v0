@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Stack } from 'expo-router';
 
-import BlockchainAPI from '../MockBlockChainAPI.js';
+import BlockchainAPI from '../MockBlockChainAPI';
 
 // --- 1. NEW TYPE DEFINITIONS ---
 // We are defining the "shape" of our data to fix all 'any' errors.
