@@ -16,7 +16,7 @@ export default function HomePage() {
           <Link href="/patient" asChild>
             <Pressable
                       // This style IS an array, so we MUST flatten it.
-              style={[styles.button, styles.patientButton]}
+              style={StyleSheet.flatten([styles.button, styles.patientButton])}
             >
               <Text style={styles.buttonText}>Patient Portal</Text>
             </Pressable>
@@ -25,7 +25,7 @@ export default function HomePage() {
           {/* Provider Portal Link */}
           <Link href="/provider" asChild>
             <Pressable
-              style={[styles.button, styles.providerButton]}
+              style={StyleSheet.flatten([styles.button, styles.providerButton])}
             >
               <Text style={styles.buttonText}>Provider Portal</Text>
             </Pressable>
@@ -34,7 +34,7 @@ export default function HomePage() {
           {/* Reception Portal Link */}
           <Link href="/reception" asChild>
             <Pressable
-              style={[styles.button, styles.receptionButton]}
+              style={StyleSheet.flatten([styles.button, styles.receptionButton])}
             >
               <Text style={styles.buttonText}>Reception Portal</Text>
             </Pressable>
@@ -43,7 +43,7 @@ export default function HomePage() {
           {/* Admin Portal Link */}
           <Link href="/admin" asChild>
             <Pressable
-              style={[styles.button, styles.adminButton]}
+              style={StyleSheet.flatten([styles.button, styles.adminButton])}
             >
               <Text style={styles.buttonText}>Admin Portal</Text>
             </Pressable>
