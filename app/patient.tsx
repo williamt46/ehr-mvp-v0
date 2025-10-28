@@ -8,24 +8,41 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  TouchableOpacity, // Using this for a cleaner button look
+  TouchableOpacity,
+  Platform, // <-- 1. IMPORT PLATFORM
 } from 'react-native';
 import { Stack } from 'expo-router';
 
-// This is the corrected import path.
-// It goes UP ONE LEVEL (../) from 'app/' to the root to find the API file.
 import BlockchainAPI from '../MockBlockChainAPI.js';
+
+// --- 2. NEW PLATFORM-AWARE ALERT FUNCTION ---
+// This wrapper checks the OS and uses the correct alert API.
+function showPlatformAlert(title: string, message: string, buttons?: any[]) {
+  if (Platform.OS === 'web') {
+    // window.alert is the web equivalent for a simple "OK" alert.
+    // We combine the title and message.
+    window.alert(`${title}\n\n${message}`);
+    // If buttons are provided (e.g., for 'OK' callbacks), find and execute the first one.
+    // This is a simple polyfill.
+    if (buttons && buttons[0] && buttons[0].onPress) {
+      buttons[0].onPress();
+    }
+  } else {
+    // On mobile (iOS/Android), use the native Alert.
+    Alert.alert(title, message, buttons);
+  }
+}
 
 // This is the refactored PatientPortal, now a "Dashboard"
 export default function PatientPortal() {
   const [patientID, setPatientID] = useState('patient-123'); // Demo Patient
-  const [pendingRequests, setPendingRequests] = useState<any[]>([]); // Using any for mock data
-  const [activePermissions, setActivePermissions] = useState<any[]>([]); // Using any for mock data
+  const [pendingRequests, setPendingRequests] = useState<any[]>([]);
+  const [activePermissions, setActivePermissions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadAccessRequests();
-  }, [patientID]); // Reload if patientID prop changes
+  }, [patientID]);
 
   const loadAccessRequests = async () => {
     setIsLoading(true);
@@ -36,15 +53,17 @@ export default function PatientPortal() {
       ]);
       setPendingRequests(pending);
       setActivePermissions(active);
-    } catch (error: any) { // Catching as 'any' type
-      Alert.alert('Error', error.message || 'Failed to load data.');
+    } catch (error: any) {
+      // --- 3. USE PLATFORM-AWARE ALERT ---
+      showPlatformAlert('Error', error.message || 'Failed to load data.');
     }
     setIsLoading(false);
   };
 
   // --- STUBBED FEATURE (a) ---
   const onEditProfile = () => {
-    Alert.alert(
+    // --- 3. USE PLATFORM-AWARE ALERT ---
+    showPlatformAlert(
       'Feature Stub',
       'This screen will allow the patient to view and edit their personal details (Req. 2a).'
     );
@@ -52,7 +71,8 @@ export default function PatientPortal() {
 
   // --- STUBBED FEATURE (c) ---
   const onViewDoctors = () => {
-    Alert.alert(
+    // --- 3. USE PLATFORM-AWARE ALERT ---
+    showPlatformAlert(
       'Feature Stub',
       'This screen will show a directory of all available doctors and their profiles (Req. 2c).'
     );
@@ -62,38 +82,54 @@ export default function PatientPortal() {
   const handleAccessRequest = async (requestID: string, approved: boolean) => {
     try {
       await BlockchainAPI.respondToAccessRequest(requestID, approved, patientID);
-      Alert.alert(
+      // --- 3. USE PLATFORM-AWARE ALERT ---
+      showPlatformAlert(
         'Success',
         approved ? 'Access granted' : 'Access denied',
         [{ text: 'OK', onPress: loadAccessRequests }] // Reload data
       );
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'An unknown error occurred.');
+      // --- 3. USE PLATFORM-AWARE ALERT ---
+      showPlatformAlert('Error', error.message || 'An unknown error occurred.');
     }
   };
 
+  // --- 4. REFACTORED REVOKE FUNCTION (COMPLEX) ---
   const revokeAccess = (permissionID: string) => {
-    Alert.alert(
-      'Revoke Access',
-      'Are you sure you want to revoke this provider\'s access?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Revoke',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await BlockchainAPI.revokePermission(permissionID);
-              Alert.alert('Success', 'Access has been revoked.', [
-                { text: 'OK', onPress: loadAccessRequests }, // Reload data
-              ]);
-            } catch (error: any) {
-              Alert.alert('Error', error.message || 'Failed to revoke access.');
-            }
+    const performRevoke = async () => {
+      try {
+        await BlockchainAPI.revokePermission(permissionID);
+        showPlatformAlert('Success', 'Access has been revoked.', [
+          { text: 'OK', onPress: loadAccessRequests }, // Reload data
+        ]);
+      } catch (error: any) {
+        showPlatformAlert('Error', error.message || 'Failed to revoke access.');
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      // On web, we use window.confirm() which returns a simple boolean
+      const userConfirmed = window.confirm(
+        'Revoke Access?\n\nAre you sure you want to revoke this provider\'s access?'
+      );
+      if (userConfirmed) {
+        performRevoke();
+      }
+    } else {
+      // On mobile, we use the button-array in Alert.alert
+      Alert.alert(
+        'Revoke Access',
+        'Are you sure you want to revoke this provider\'s access?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Revoke',
+            style: 'destructive',
+            onPress: performRevoke, // Pass the function to onPress
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
   };
 
   // --- RENDER ---
@@ -203,7 +239,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 16,
   },
-  // --- NEW STYLES ---
   featureHub: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
@@ -235,7 +270,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-  // --- END NEW STYLES ---
   accessSection: {
     // Wrapper for the access lists
   },
@@ -327,3 +361,4 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
   },
 });
+
