@@ -141,7 +141,7 @@ const BlockchainAPI = {
     const requestID = `req-${Math.random().toString(36).substring(7)}`;
     
     // We get a "real" provider name based on their ID
-    const providerName = 'Dr. ' + data.providerID.split('-')[0].charAt(0).toUpperCase() + data.providerID.split('-')[0].slice(1);
+    const providerName = 'House' ; // + data.providerID.split('-')[0].charAt(0).toUpperCase() + data.providerID.split('-')[0].slice(1)
     
     const newRequest: AccessRequest = {
       requestID,
