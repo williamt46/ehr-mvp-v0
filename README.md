@@ -1723,14 +1723,14 @@ This domain assesses how seamlessly the new blockchain solution fits into the da
 
 
 
-| Use Case | Specific Company/Product Mentioned by Codrin Arsene | Source Citation |
-| :--- | :--- | :--- |
-| **Streamline Patient Intake** | **Kalibrate Blockchain** awards licenses for its **FormDrop SDK**, which enables automatic form submission from smartphones and indexes patient information on the **Universal Patient Index** [1]. | [1] |
-| **Patient Consent Management** | **HealthVerity** leads the charge with its **HealthVerity Consent** platform, leveraging blockchain to create a **single source of truth** for consumer consent and data preferences [2]. | [2] |
-| **Secure Data Transfer** | While discussing secure data transfer between providers, Arsene mentions the collaboration of **Health Care Service Corporation (HCSC)**, **PNC Bank**, and **IBM** to design a blockchain network for improved transparency and interoperability [3]. Additionally, **Medicalchain** is noted for enabling users to securely access their health data and record interactions in an auditable way [4]. | [3, 4] |
-| **Data Marketplace** | **Hu-manity** developed a smart contract allowing patients to negotiate terms of consent for selling their medical data [5]. | [5] |
-| **Data Marketplace** | **Open Health Platform** uses blockchain technology for sharing data with healthcare providers, researchers, and insurers [5]. | [5] |
-| **Data Marketplace** | **Embleema** is working to remove middlemen, enabling patients to own and monetize their data directly [5]. | [5] |
+| Use Case | Specific Company or Product |
+| :--- | :--- | 
+| **Streamline Patient Intake** | **Kalibrate Blockchain** awards licenses for its **FormDrop SDK**, which enables automatic form submission from smartphones and indexes patient information on the **Universal Patient Index** [1]. | 
+| **Patient Consent Management** | **HealthVerity** leads the charge with its **HealthVerity Consent** platform, leveraging blockchain to create a **single source of truth** for consumer consent and data preferences [2]. | 
+| **Secure Data Transfer** | While discussing secure data transfer between providers, Arsene mentions the collaboration of **Health Care Service Corporation (HCSC)**, **PNC Bank**, and **IBM** to design a blockchain network for improved transparency and interoperability [3]. Additionally, **Medicalchain** is noted for enabling users to securely access their health data and record interactions in an auditable way [4]. | 
+| **Data Marketplace** | **Hu-manity** developed a smart contract allowing patients to negotiate terms of consent for selling their medical data [5]. | 
+| **Data Marketplace** | **Open Health Platform** uses blockchain technology for sharing data with healthcare providers, researchers, and insurers [5]. |
+| **Data Marketplace** | **Embleema** is working to remove middlemen, enabling patients to own and monetize their data directly [5]. | 
 
 
 ## Core Value Propositions for Each Target
