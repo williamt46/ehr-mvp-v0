@@ -1720,3 +1720,23 @@ This domain assesses how seamlessly the new blockchain solution fits into the da
 ***
 
 *Clarification Analogy:* Think of the new blockchain system as an *Express Toll Lane* built directly over the existing *Local Roads* (legacy EHRs). You don't replace the local roads (which handle basic traffic), but you add a fast, specialized lane for high-value tasks like cross-provider data sharing and identity verification. This new layer hides the complexity of the toll technology (the blockchain) while delivering the core benefit: **faster, simpler access** (Domain 5, 15.5% better ease of use) to **complete records** (Domain 2).
+
+
+
+| Use Case | Specific Company/Product Mentioned by Codrin Arsene | Source Citation |
+| :--- | :--- | :--- |
+| **Streamline Patient Intake** | **Kalibrate Blockchain** awards licenses for its **FormDrop SDK**, which enables automatic form submission from smartphones and indexes patient information on the **Universal Patient Index** [1]. | [1] |
+| **Patient Consent Management** | **HealthVerity** leads the charge with its **HealthVerity Consent** platform, leveraging blockchain to create a **single source of truth** for consumer consent and data preferences [2]. | [2] |
+| **Secure Data Transfer** | While discussing secure data transfer between providers, Arsene mentions the collaboration of **Health Care Service Corporation (HCSC)**, **PNC Bank**, and **IBM** to design a blockchain network for improved transparency and interoperability [3]. Additionally, **Medicalchain** is noted for enabling users to securely access their health data and record interactions in an auditable way [4]. | [3, 4] |
+| **Data Marketplace** | **Hu-manity** developed a smart contract allowing patients to negotiate terms of consent for selling their medical data [5]. | [5] |
+| **Data Marketplace** | **Open Health Platform** uses blockchain technology for sharing data with healthcare providers, researchers, and insurers [5]. | [5] |
+| **Data Marketplace** | **Embleema** is working to remove middlemen, enabling patients to own and monetize their data directly [5]. | [5] |
+
+
+## Core Value Propositions for Each Target
+Blockchain's value propositions address fundamental pain points for different stakeholders [30, 31].
+| Target Group | Core Value Propositions (Focusing on the Implemented Use Cases) |
+| :--- | :--- |
+| **Providers & Institutions** (Hospitals, Clinics) | **Enhanced Security:** Cryptographic protection, immutable audit trails, and decentralized architecture reduce risks of data breaches and fraud [30-32]. **Interoperability:** Creates effective data sharing networks, addressing infrastructure fragmentation and differing data formats (often leveraging **HL7 FHIR standards**) [31, 33, 34]. **Compliance:** Automated consent management via smart contracts helps maintain regulatory standards (HIPAA/GDPR) [7, 31]. |
+| **Patients/Consumers** | **Data Ownership and Control (Patient-Centricity):** Patients gain complete control over their medical records, including the right to grant or revoke access privileges [30, 31, 35]. **Data Portability:** Enables patients to have a single, verifiable source of truth for their records, facilitating easier movement between healthcare providers [14, 31]. **Monetization (Emerging):** Ability to sell anonymized health data for research, providing financial compensation [15, 31]. |
+| **Pharma & Research (CROs, Universities)** | **Data Integrity and Reproducibility:** Immutable records of protocols, hypotheses, and collected data eliminate post-hoc manipulation and aid research integrity [31, 36]. **Streamlined Clinical Trials:** Faster patient recruitment and efficient, traceable consent management improve operational efficiency [5, 6, 31]. **Data Provenance:** Provides transparent, verifiable tracking of data origin and history [30]. |
