@@ -13,10 +13,20 @@ import {
 } from 'react-native';
 import { Stack } from 'expo-router';
 
-import BlockchainAPI, { AccessRequest, ActivePermission } from '../MockBlockChainAPI';
+// --- 1. IMPORT CONSORTIUM API ---
+import ConsortiumAPI, { ConsentContract } from '../MockBlockChainAPI';
 
-// --- 2. NEW PLATFORM-AWARE ALERT FUNCTION ---
-// This wrapper checks the OS and uses the correct alert API.
+// Helper to format provider IDs into names for the demo
+const getProviderName = (id: string) => {
+  const names: { [key: string]: string } = {
+    'provider-789': 'Dr. Provider (CityClinic)',
+    'provider-ada-l': 'Dr. Ada Lovelace',
+    'provider-grace-h': 'Dr. Grace Hopper',
+  };
+  return names[id] || id; // Fallback to ID if name not found
+};
+
+// Platform-aware alert helper
 function showPlatformAlert(title: string, message: string, buttons?: any[]) {
   if (Platform.OS === 'web') {
     window.alert(`${title}\n\n${message}`);
@@ -24,193 +34,168 @@ function showPlatformAlert(title: string, message: string, buttons?: any[]) {
       buttons[0].onPress();
     }
   } else {
-    // On mobile (iOS/Android), use the native Alert.
     Alert.alert(title, message, buttons);
   }
 }
 
-// PatientPortal Dashboard
 export default function PatientPortal() {
-  const [patientID] = useState('patient-123'); // Demo Patient
+  const [patientID] = useState('patient-123'); // Our logged-in identity
   
-  // --- 2. TYPED STATE ---
-  // Our state is no longer 'any[]', it's properly typed.
-  const [pendingRequests, setPendingRequests] = useState<AccessRequest[]>([]);
-  const [activePermissions, setActivePermissions] = useState<ActivePermission[]>([]);
+  // --- 2. NEW STATE STRUCTURE ---
+  // We store the raw contracts from the ledger
+  const [consents, setConsents] = useState<ConsentContract[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadAccessRequests();
+    loadLedgerData();
   }, [patientID]);
 
-  const loadAccessRequests = async () => {
+  const loadLedgerData = async () => {
     setIsLoading(true);
     try {
-      // The API functions now return strongly-typed promises
-      const [pending, active] = await Promise.all([
-        BlockchainAPI.getPendingRequests(patientID),
-        BlockchainAPI.getActivePermissions(patientID),
-      ]);
-      setPendingRequests(pending);
-      setActivePermissions(active);
+      // Fetch the immutable ledger records for this patient
+      const myContracts = await ConsortiumAPI.getMyConsents(patientID);
+      setConsents(myContracts);
     } catch (error) {
-            // --- 3. USE PLATFORM-AWARE ALERT ---
-
-      showPlatformAlert('Error', (error as Error).message || 'Failed to load data.');
+      showPlatformAlert('Error', (error as Error).message || 'Failed to load ledger.');
     }
     setIsLoading(false);
   };
 
-  // Stubbed Features
-  const onEditProfile = () => {
-        // --- 3. USE PLATFORM-AWARE ALERT ---
+  // Filter for the UI view
+  const pendingRequests = consents.filter(c => c.status === 'PENDING');
+  const activePermissions = consents.filter(c => c.status === 'ACTIVE');
 
-    showPlatformAlert(
-      'Feature Stub',
-      'This screen will allow the patient to view and edit their personal details (Req. 2a).'
-    );
-  };
+  // --- ACTIONS ---
 
-  const onViewDoctors = () => {
-        // --- 3. USE PLATFORM-AWARE ALERT ---
-
-    showPlatformAlert(
-      'Feature Stub',
-      'This screen will show a directory of all available doctors and their profiles (Req. 2c).'
-    );
-  };
-
-  // Core Access Features
-  const handleAccessRequest = async (requestID: string, approved: boolean) => {
+  const handleApprove = async (contractID: string) => {
     try {
-      await BlockchainAPI.respondToAccessRequest(requestID, approved, patientID);
+      // Sign the transaction
+      await ConsortiumAPI.approveConsent(contractID, patientID);
       showPlatformAlert(
-        'Success',
-        approved ? 'Access granted' : 'Access denied',
-        [{ text: 'OK', onPress: loadAccessRequests }]
+        'Transaction Signed',
+        'You have approved access. This action has been recorded on the ledger.',
+        [{ text: 'OK', onPress: loadLedgerData }]
       );
     } catch (error) {
-      showPlatformAlert('Error', (error as Error).message || 'An unknown error occurred.');
+      showPlatformAlert('Error', (error as Error).message);
     }
   };
-  // --- 4. REFACTORED REVOKE FUNCTION (COMPLEX) ---
-  const revokeAccess = (permissionID: string) => {
+
+  const handleRevoke = (contractID: string) => {
     const performRevoke = async () => {
       try {
-        await BlockchainAPI.revokePermission(permissionID);
-        showPlatformAlert('Success', 'Access has been revoked.', [
-          { text: 'OK', onPress: loadAccessRequests },
+        await ConsortiumAPI.revokeConsent(contractID, patientID);
+        showPlatformAlert('Revocation Confirmed', 'Access has been revoked on the ledger.', [
+          { text: 'OK', onPress: loadLedgerData },
         ]);
       } catch (error) {
-        showPlatformAlert('Error', (error as Error).message || 'Failed to revoke access.');
+        showPlatformAlert('Error', (error as Error).message);
       }
     };
 
     if (Platform.OS === 'web') {
-            // On web, we use window.confirm() which returns a simple boolean
-      const userConfirmed = window.confirm(
-        'Revoke Access?\n\nAre you sure you want to revoke this provider\'s access?'
-      );
-      if (userConfirmed) {
+      if (window.confirm('Confirm Revocation?\n\nThis will permanently mark the contract as REVOKED on the blockchain.')) {
         performRevoke();
       }
     } else {
-      // On mobile, we use the button-array in Alert.alert
       Alert.alert(
-        'Revoke Access',
-        'Are you sure you want to revoke this provider\'s access?',
+        'Confirm Revocation',
+        'This will permanently mark the contract as REVOKED on the blockchain.',
         [
           { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Revoke',
-            style: 'destructive',
-            onPress: performRevoke,// Pass the function to onPress
-          },
+          { text: 'Revoke', style: 'destructive', onPress: performRevoke },
         ]
       );
     }
   };
 
-  // --- RENDER ---
+  // Stubbed Features
+  const onStubAction = (feature: string) => {
+    showPlatformAlert('Feature Stub', `This would navigate to the ${feature} screen.`);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Stack.Screen options={{ title: 'Patient Portal' }} />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        {/* Feature Hub(Req. 2a & 2c)*/}
+      <Stack.Screen options={{ title: 'Patient Wallet' }} />
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        
+        {/* Identity Header */}
+        <View style={styles.identityCard}>
+          <Text style={styles.identityLabel}>Logged in as (DID):</Text>
+          <Text style={styles.identityValue}>{patientID}</Text>
+          <Text style={styles.identityOrg}>Organization: PatientOrg</Text>
+        </View>
+
+        {/* Dashboard Buttons */}
         <View style={styles.featureHub}>
-          <Text style={styles.sectionTitle}>My Dashboard</Text>
           <View style={styles.featureGrid}>
-            <TouchableOpacity style={styles.featureButton} onPress={onEditProfile}>
-              <Text style={styles.featureButtonText}>View/Edit Profile</Text>
+            <TouchableOpacity style={styles.featureButton} onPress={() => onStubAction('Profile')}>
+              <Text style={styles.featureButtonText}>Edit Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.featureButton} onPress={onViewDoctors}>
-              <Text style={styles.featureButtonText}>View Doctor Directory</Text>
+            <TouchableOpacity style={styles.featureButton} onPress={() => onStubAction('Doctor Directory')}>
+              <Text style={styles.featureButtonText}>Doctor Directory</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Access Management (Req. 2b)*/}
         <View style={styles.accessSection}>
-          <Text style={styles.sectionTitle}>Manage Access</Text>
+          <Text style={styles.sectionTitle}>Consent Contracts</Text>
+          
           {isLoading ? (
             <ActivityIndicator size="large" color="#2563eb" />
           ) : (
             <>
-              {/* Pending Requests List */}
-              <Text style={styles.subSectionTitle}>Pending Requests</Text>
+              {/* --- PENDING REQUESTS --- */}
+              <Text style={styles.subSectionTitle}>Pending Approvals ({pendingRequests.length})</Text>
+              
               {pendingRequests.length > 0 ? (
-                // TypeScript now knows 'item' is an 'AccessRequest'
-                pendingRequests.map((item) => (
-                  <View key={item.requestID} style={styles.card}>
+                pendingRequests.map((contract) => (
+                  <View key={contract.contractID} style={styles.card}>
                     <View style={styles.cardContent}>
-                      <Text style={styles.cardTitle}>Dr. {item.providerName}</Text>
+                      <Text style={styles.cardTitle}>{getProviderName(contract.providerID)}</Text>
+                      <Text style={styles.cardHash}>Contract ID: {contract.contractID}</Text>
                       <Text style={styles.cardInfo}>
-                        <Text style={styles.infoLabel}>Purpose: </Text>{item.purpose}
+                        <Text style={styles.infoLabel}>Purpose: </Text>{contract.purpose}
                       </Text>
                       <Text style={styles.cardInfo}>
-                        <Text style={styles.infoLabel}>Duration: </Text>{item.durationDays} days
+                        <Text style={styles.infoLabel}>Date: </Text>{new Date(contract.timestamp).toLocaleDateString()}
                       </Text>
                     </View>
                     <View style={styles.cardFooter}>
                       <Pressable
                         style={[styles.button, styles.approveButton]}
-                        onPress={() => handleAccessRequest(item.requestID, true)}
+                        onPress={() => handleApprove(contract.contractID)}
                       >
-                        <Text style={[styles.buttonText, styles.approveButtonText]}>Approve</Text>
+                        <Text style={[styles.buttonText, styles.approveButtonText]}>Sign & Approve</Text>
                       </Pressable>
-                      <Pressable
-                        style={[styles.button, styles.denyButton]}
-                        onPress={() => handleAccessRequest(item.requestID, false)}
-                      >
-                        <Text style={[styles.buttonText, styles.denyButtonText]}>Deny</Text>
-                      </Pressable>
+                      {/* Note: To 'Deny' in this model, we could just ignore or implement a 'Reject' state. 
+                          For MVP, we'll focus on Approve. */}
                     </View>
                   </View>
                 ))
               ) : (
-                <Text style={styles.emptyText}>No pending requests.</Text>
+                <Text style={styles.emptyText}>No pending contracts.</Text>
               )}
 
-              {/* Active Permissions List */}
-              <Text style={styles.subSectionTitle}>Active Permissions</Text>
+              {/* --- ACTIVE PERMISSIONS --- */}
+              <Text style={styles.subSectionTitle}>Active Contracts ({activePermissions.length})</Text>
+              
               {activePermissions.length > 0 ? (
-                // TypeScript now knows 'item' is an 'ActivePermission'
-                activePermissions.map((item) => (
-                  <View key={item.permissionID} style={styles.card}>
+                activePermissions.map((contract) => (
+                  <View key={contract.contractID} style={[styles.card, styles.activeCard]}>
                     <View style={styles.cardContent}>
-                      <Text style={styles.cardTitle}>Dr. {item.providerName}</Text>
+                      <Text style={styles.cardTitle}>{getProviderName(contract.providerID)}</Text>
+                      <Text style={styles.cardHash}>Contract ID: {contract.contractID}</Text>
                       <Text style={styles.cardInfo}>
-                        <Text style={styles.infoLabel}>Expires: </Text>
-                        {new Date(item.expiryDate).toLocaleDateString()}
+                        <Text style={styles.infoLabel}>Status: </Text>
+                        <Text style={{color: 'green', fontWeight: 'bold'}}>ACTIVE</Text>
                       </Text>
                     </View>
                     <View style={styles.cardFooter}>
                       <Pressable
                         style={[styles.button, styles.revokeButton]}
-                        onPress={() => revokeAccess(item.permissionID)}
+                        onPress={() => handleRevoke(contract.contractID)}
                       >
                         <Text style={[styles.buttonText, styles.approveButtonText]}>Revoke Access</Text>
                       </Pressable>
@@ -218,7 +203,7 @@ export default function PatientPortal() {
                   </View>
                 ))
               ) : (
-                <Text style={styles.emptyText}>No active permissions.</Text>
+                <Text style={styles.emptyText}>No active contracts.</Text>
               )}
             </>
           )}
@@ -228,138 +213,78 @@ export default function PatientPortal() {
   );
 }
 
-// --- STYLESHEET ---
-// (No changes to styles)
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#f1f5f9',
-  },
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
+  safeArea: { flex: 1, backgroundColor: '#f1f5f9' },
+  container: { flex: 1 },
+  contentContainer: { padding: 16 },
+  
+  // Identity Card
+  identityCard: {
+    backgroundColor: '#1e293b',
     padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
   },
+  identityLabel: { color: '#94a3b8', fontSize: 12, textTransform: 'uppercase', fontWeight: '700' },
+  identityValue: { color: '#fff', fontSize: 18, fontWeight: 'bold', fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' },
+  identityOrg: { color: '#cbd5e1', fontSize: 14, marginTop: 4 },
+
   featureHub: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2.22,
-    elevation: 3,
+    elevation: 2,
   },
-  featureGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
+  featureGrid: { flexDirection: 'row', justifyContent: 'space-between' },
   featureButton: {
     flex: 1,
     backgroundColor: '#e0e7ff',
-    paddingVertical: 16,
-    paddingHorizontal: 8,
+    paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',
     marginHorizontal: 4,
   },
-  featureButtonText: {
-    color: '#3730a3',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  accessSection: {
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1e293b',
-    marginBottom: 12,
-  },
-  subSectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#334155',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: '#64748b',
-    textAlign: 'center',
-    paddingVertical: 16,
-    fontStyle: 'italic',
-  },
+  featureButtonText: { color: '#3730a3', fontWeight: '600' },
+
+  accessSection: {},
+  sectionTitle: { fontSize: 22, fontWeight: '700', color: '#1e293b', marginBottom: 12 },
+  subSectionTitle: { fontSize: 16, fontWeight: '600', color: '#475569', marginTop: 16, marginBottom: 8, textTransform: 'uppercase' },
+  emptyText: { fontSize: 14, color: '#94a3b8', textAlign: 'center', paddingVertical: 16, fontStyle: 'italic' },
+  
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2.22,
     elevation: 3,
     overflow: 'hidden',
+    borderLeftWidth: 4,
+    borderLeftColor: '#cbd5e1',
   },
-  cardContent: {
-    padding: 16,
+  activeCard: {
+    borderLeftColor: '#16a34a', // Green for active
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#0f172a',
-    marginBottom: 8,
-  },
-  cardInfo: {
-    fontSize: 14,
-    color: '#475569',
-    marginBottom: 4,
-  },
-  infoLabel: {
-    fontWeight: '500',
-    color: '#334155',
-  },
+  cardContent: { padding: 16 },
+  cardTitle: { fontSize: 18, fontWeight: '600', color: '#0f172a', marginBottom: 4 },
+  cardHash: { fontSize: 10, color: '#94a3b8', fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', marginBottom: 8 },
+  cardInfo: { fontSize: 14, color: '#475569', marginBottom: 4 },
+  infoLabel: { fontWeight: '500', color: '#334155' },
+  
   cardFooter: {
     flexDirection: 'row',
     backgroundColor: '#f8fafc',
     borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+    borderTopColor: '#e2e8f0',
+    padding: 8,
   },
   button: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  approveButton: {
-    backgroundColor: '#2563eb',
-    borderBottomLeftRadius: 12,
-  },
-  approveButtonText: {
-    color: '#ffffff',
-  },
-  denyButton: {
-    backgroundColor: '#e2e8f0',
-    borderLeftWidth: 1,
-    borderLeftColor: '#f1f5f9',
-    borderBottomRightRadius: 12,
-  },
-  denyButtonText: {
-    color: '#334155',
-  },
-  revokeButton: {
-    backgroundColor: '#dc2626',
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-  },
+  buttonText: { fontSize: 14, fontWeight: '600' },
+  approveButton: { backgroundColor: '#2563eb' },
+  approveButtonText: { color: '#ffffff' },
+  revokeButton: { backgroundColor: '#dc2626' },
 });
-

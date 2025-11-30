@@ -149,7 +149,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
-                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Consent<span class="text-brand-primary">Chain</span> Analytics</h1>
+                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Smart<span class="text-brand-primary">Consent</span>MVP</h1>
             </div>
             <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-500">
                 <a href="#problem" class="hover:text-brand-primary transition">The Challenge</a>
@@ -173,6 +173,7 @@
                 Based on 2024-2025 research, we analyze which blockchain architecture delivers the 
                 <strong>speed</strong>, <strong>security</strong>, and <strong>compliance</strong> required for modern medical consent systems.
             </p>
+
             
             <!-- Key Metric Cards (Goal: Inform) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8" id="problem">
@@ -383,6 +384,19 @@
             </div>
         </section>
 
+
+        <!--Executive summary-->
+<section class="text-center space-y-6">
+        <p class="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed"></p>
+            The "Smart Consent Gateway" is a Minimum Viable Product (MVP) designed to address the critical friction point in modern healthcare data exchange: verifiable, patient-controlled consent. Despite the proliferation of digital health data, silos and vulnerability to breaches remain prevalent, while static consent models hinder interoperability and research. Our MVP bridges this gap by introducing a secure interoperability layer atop existing Electronic Health Records (EHRs), rather than attempting to replace them.
+        </p> 
+        <p >
+    At its core, the solution leverages a <strong>permissioned Hyperledger Fabric blockchain</strong> to create an immutable, transparent audit trail of all data access requests and grants. This choice aligns with findings from research in the last two years that identify permissioned blockchains as the optimal architecture for balancing privacy, throughput, and regulatory compliance (HIPAA/GDPR) in healthcare settings. By eliminating variable "gas" fees associated with public chains, we ensure a scalable, cost-effective model for high-volume institutional use.
+    </p>
+    <p> 
+A strategic differentiator of our MVP is the integration of <strong>Self-Sovereign Identity (SSI)</strong>  and <strong>Decentralized Identifiers (DIDs)</strong>. This empowers patients to hold verifiable credentials in a digital wallet, granting them granular, real-time control over their data permissions—a capability proven to increase willingness to share data for research. Automated via smart contracts, this "consent-as-a-service" model reduces administrative burden for providers, mitigates legal risk through automated compliance checks, and restores data sovereignty to patients. This positions our business to capture value by facilitating frictionless, secure research participant recruitment and data exchange in a rapidly growing digital health market.
+        </p>
+</section>
         <!-- FOOTER -->
         <footer class="border-t border-gray-200 pt-8 pb-12 text-center text-gray-500 text-sm">
             <p>&copy; 2025 Infographic synthesized from recent academic research (Welzel, Rohini, Pham, Lacson et al.).</p>
