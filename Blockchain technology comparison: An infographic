@@ -14,17 +14,6 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Palette Choice: "Vibrant Tech" - Deep Indigo, Electric Blue, Cyan, and Emerald Green -->
-    <!-- 
-         Primary Background: #F8FAFC (Slate 50)
-         Card Background: #FFFFFF (White)
-         Primary Text: #1E293B (Slate 800)
-         Accent 1 (Indigo): #4F46E5
-         Accent 2 (Cyan): #06B6D4
-         Accent 3 (Emerald): #10B981
-         Accent 4 (Rose - for alerts): #E11D48
-    -->
-    
     <script>
         tailwind.config = {
             theme: {
@@ -69,34 +58,23 @@
             background: #94A3B8;
         }
 
-        /* Chart Container Styling - MANDATORY */
+        /* Chart Container Styling */
         .chart-container {
             position: relative;
             width: 100%;
             margin-left: auto;
             margin-right: auto;
-            /* Default heights */
             height: 300px;
             max-height: 400px;
         }
 
-        /* Specific constraints for different chart types if needed */
-        .chart-container-large {
-            height: 400px;
-            max-height: 500px;
-        }
-
-        /* Responsive adjustments */
         @media (min-width: 768px) {
             .chart-container {
                 height: 350px;
             }
-            .chart-container-large {
-                height: 450px;
-            }
         }
 
-        /* Diagram Styling (No SVG/Mermaid) */
+        /* Diagram Styling */
         .flow-node {
             background: white;
             border-left: 5px solid #4F46E5;
@@ -116,8 +94,7 @@
             justify-content: center;
         }
         
-        /* Gradient Text */
-      .text-gradient {
+        .text-gradient {
             background: linear-gradient(to right, #4F46E5, #06B6D4);
             -webkit-background-clip: text;
             background-clip: text;
@@ -125,22 +102,6 @@
             color: transparent;
         }
     </style>
-    
-    <!-- 
-    NO MERMAID JS USED.
-    NO SVG GRAPHICS USED.
-    -->
-    
-    <!-- 
-    NARRATIVE PLAN:
-    1. Introduction: The critical need for secure patient consent (Source: Welzel 2025).
-    2. The Landscape: Comparing Public (Ethereum) vs. Permissioned (Hyperledger) blockchains (Source: Lacson et al., Rohini 2024).
-    3. Performance Metrics: Throughput, Latency, and Cost analysis demonstrating why Permissioned wins for this use case.
-    4. Architecture: A visual flow of the "Smart Consent" model using HTML/CSS.
-    5. Regulatory Check: HIPAA/GDPR alignment (Source: Pham 2024).
-    6. Conclusion: The verdict on the most efficient technology.
-    -->
-
 </head>
 <body class="antialiased selection:bg-brand-primary selection:text-white">
 
@@ -174,8 +135,6 @@
                 <strong>speed</strong>, <strong>security</strong>, and <strong>compliance</strong> required for modern medical consent systems.
             </p>
 
-            
-            <!-- Key Metric Cards (Goal: Inform) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8" id="problem">
                 <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-brand-warning">
                     <div class="text-brand-warning font-bold text-sm uppercase tracking-wide mb-2">The Risk</div>
@@ -195,7 +154,7 @@
             </div>
         </section>
 
-        <!-- SECTION 2: COMPARATIVE ANALYSIS (Goal: Compare) -->
+        <!-- SECTION 2: COMPARATIVE ANALYSIS -->
         <section id="comparison" class="space-y-8">
             <div class="border-l-4 border-brand-primary pl-6">
                 <h3 class="text-3xl font-bold text-gray-900">Public vs. Permissioned: The Battle for Healthcare</h3>
@@ -206,7 +165,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
-                <!-- Chart 1: Radar Chart - System Attributes -->
+                <!-- Chart 1: Radar Chart -->
                 <div class="bg-white rounded-xl shadow-md p-6 flex flex-col">
                     <h4 class="text-lg font-bold text-gray-800 mb-4">Strategic Fit Analysis</h4>
                     <p class="text-sm text-gray-500 mb-6">
@@ -218,7 +177,7 @@
                     </div>
                 </div>
 
-                <!-- Chart 2: Bar Chart - Throughput & Latency -->
+                <!-- Chart 2: Bar Chart -->
                 <div class="bg-white rounded-xl shadow-md p-6 flex flex-col">
                     <h4 class="text-lg font-bold text-gray-800 mb-4">Performance Benchmarks</h4>
                     <p class="text-sm text-gray-500 mb-6">
@@ -232,11 +191,9 @@
             </div>
         </section>
 
-        <!-- SECTION 3: COST & SCALABILITY (Goal: Compare/Relationships) -->
+        <!-- SECTION 3: COST & SCALABILITY -->
         <section class="space-y-8">
              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Text Context -->
                 <div class="md:col-span-1 space-y-4">
                     <h3 class="text-2xl font-bold text-gray-900">The Cost of Consent</h3>
                     <p class="text-gray-600">
@@ -263,10 +220,8 @@
             </div>
         </section>
 
-       <!-- SECTION 4: ARCHITECTURE FLOW (Goal: Process/Organize) -->
-        <!-- Implemented using Tailwind/HTML grid instead of Mermaid/SVG -->
+       <!-- SECTION 4: ARCHITECTURE FLOW -->
         <section id="architecture" class="bg-white border border-gray-200 shadow-xl rounded-2xl p-8 md:p-12 text-gray-900 overflow-hidden relative">
-            <!-- Decorative background blob for depth -->
             <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-brand-primary opacity-5 blur-3xl"></div>
             
             <div class="text-center mb-10 relative z-10">
@@ -277,7 +232,6 @@
                 </p>
             </div>
 
-            <!-- Flow Diagram Container -->
             <div class="max-w-5xl mx-auto relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-8 gap-4 items-center">
                     
@@ -286,11 +240,7 @@
                         <div class="font-bold text-brand-primary mb-1 text-lg">1. Patient Action</div>
                         <div class="text-sm text-gray-600">Patient grants access via App. Generates digital signature.</div>
                     </div>
-
-                    <!-- Arrow -->
-                    <div class="md:col-span-1 flow-arrow transform rotate-90 md:rotate-0">
-                        &#10140; <!-- Unicode Arrow -->
-                    </div>
+                    <div class="md:col-span-1 flow-arrow transform rotate-90 md:rotate-0">&#10140;</div>
 
                     <!-- Step 2 -->
                     <div class="md:col-span-2 flow-node bg-slate-50 shadow-lg border border-brand-secondary ring-2 ring-brand-secondary ring-opacity-20">
@@ -298,11 +248,7 @@
                         <div class="text-sm text-gray-700">Verifies ID. </div>
                         <div class="text-sm text-gray-700">Records Consent Hash.</div>
                     </div>
-
-                    <!-- Arrow -->
-                    <div class="md:col-span-1 flow-arrow transform rotate-90 md:rotate-0">
-                        &#10140;
-                    </div>
+                    <div class="md:col-span-1 flow-arrow transform rotate-90 md:rotate-0">&#10140;</div>
 
                     <!-- Step 3 -->
                     <div class="md:col-span-2 flow-node bg-white shadow-xl ring-1 ring-gray-100 border-l-[6px] border-brand-accent">
@@ -312,13 +258,10 @@
                     </div>
 
                 </div>
-
-                <!-- Sub-layer for data storage -->
+                
                 <div class="mt-8 grid grid-cols-1 md:grid-cols-7 gap-4">
-                    <div class="md:col-span-3"></div> <!-- Spacer -->
-                    <div class="md:col-span-1 text-center text-gray-400 text-2xl font-bold animate-bounce">
-                        &#8595; <!-- Down Arrow -->
-                    </div>
+                    <div class="md:col-span-3"></div>
+                    <div class="md:col-span-1 text-center text-gray-400 text-2xl font-bold animate-bounce">&#8595;</div>
                     <div class="md:col-span-3"></div>
                 </div>
                 
@@ -336,7 +279,7 @@
             </div>
         </section>
 
-        <!-- SECTION 5: FINAL VERDICT (Goal: Conclusion) -->
+        <!-- SECTION 5: FINAL VERDICT -->
         <section id="verdict" class="py-8">
             <h3 class="text-3xl font-bold text-gray-900 mb-8 text-center">The Final Verdict</h3>
             
@@ -348,7 +291,6 @@
                     </div>
                     <h4 class="text-2xl font-bold mb-2">Recommended: Permissioned Consortium</h4>
                     <p class="text-blue-200 font-mono text-sm mb-6">(e.g., Hyperledger Fabric)</p>
-                    
                     <ul class="space-y-3">
                         <li class="flex items-start">
                             <span class="text-brand-accent mr-2 text-lg">&#10004;</span>
@@ -362,10 +304,6 @@
                             <span class="text-brand-accent mr-2 text-lg">&#10004;</span>
                             <span class="text-sm"><strong>Regulatory Compliance:</strong> Known entities (Nodes) satisfy HIPAA/GDPR requirements better than anonymous public nodes.</span>
                         </li>
-                        <li class="flex items-start">
-                            <span class="text-brand-accent mr-2 text-lg">&#10004;</span>
-                            <span class="text-sm"><strong>Privacy Channels:</strong> Segregate sensitive data streams between specific parties.</span>
-                        </li>
                     </ul>
                 </div>
 
@@ -373,30 +311,51 @@
                 <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 relative">
                     <h4 class="text-2xl font-bold text-gray-800 mb-2">Alternative: Public Chain</h4>
                     <p class="text-gray-500 font-mono text-sm mb-6">(e.g., Ethereum / L2 Solutions)</p>
-                    
                     <p class="text-gray-600 text-sm mb-4">
                         Best suited for <strong>patient-centric research markets</strong> where maximum decentralization and transparency are prioritized over transaction cost.
-                    </p>
-                    <p class="text-gray-600 text-sm">
-                        <em>Major Drawbacks:</em> Variable costs, lower privacy by default (requires Zero-Knowledge Proofs add-ons), and potentially slower finality.
                     </p>
                 </div>
             </div>
         </section>
 
+        <!-- NEW SURVEY SECTION -->
+        <section id="survey" class="bg-indigo-50 border-y border-indigo-100 py-12 rounded-xl my-12">
+            <div class="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center gap-8">
+                <!-- QR Code Container -->
+                <div class="flex-shrink-0 bg-white p-4 rounded-xl shadow-sm border border-indigo-100">
+                    <!-- 
+                        CRITICAL: The src is set to 'image.png'. 
+                        You MUST save your uploaded image as 'image.png' in the same folder.
+                        Fallback points to a generic QR code placeholder.
+                    -->
+                    <img src="image.png" 
+                         onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ExampleSurveyLink';" 
+                         alt="Scan to take survey" 
+                         class="w-32 h-32 md:w-40 md:h-40 object-contain">
+                </div>
+                <!-- Survey Text -->
+                <div class="text-center md:text-left space-y-3">
+                    <h3 class="text-2xl font-bold text-brand-primary">We Value Your Input</h3>
+                    <p class="text-gray-700 leading-relaxed text-lg">
+                        We need your views on a new digital system for securely managing your health data consent. Your honest opinion is vital to shaping the next generation of health information exchange to empower patients and advance medical research.
+                    </p>
+                </div>
+            </div>
+        </section>
 
         <!--Executive summary-->
-<section class="text-center space-y-6">
-        <p class="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed"></p>
-            The "Smart Consent Gateway" is a Minimum Viable Product (MVP) designed to address the critical friction point in modern healthcare data exchange: verifiable, patient-controlled consent. Despite the proliferation of digital health data, silos and vulnerability to breaches remain prevalent, while static consent models hinder interoperability and research. Our MVP bridges this gap by introducing a secure interoperability layer atop existing Electronic Health Records (EHRs), rather than attempting to replace them.
-        </p> 
-        <p >
-    At its core, the solution leverages a <strong>permissioned Hyperledger Fabric blockchain</strong> to create an immutable, transparent audit trail of all data access requests and grants. This choice aligns with findings from research in the last two years that identify permissioned blockchains as the optimal architecture for balancing privacy, throughput, and regulatory compliance (HIPAA/GDPR) in healthcare settings. By eliminating variable "gas" fees associated with public chains, we ensure a scalable, cost-effective model for high-volume institutional use.
-    </p>
-    <p> 
-A strategic differentiator of our MVP is the integration of <strong>Self-Sovereign Identity (SSI)</strong>  and <strong>Decentralized Identifiers (DIDs)</strong>. This empowers patients to hold verifiable credentials in a digital wallet, granting them granular, real-time control over their data permissions—a capability proven to increase willingness to share data for research. Automated via smart contracts, this "consent-as-a-service" model reduces administrative burden for providers, mitigates legal risk through automated compliance checks, and restores data sovereignty to patients. This positions our business to capture value by facilitating frictionless, secure research participant recruitment and data exchange in a rapidly growing digital health market.
-        </p>
-</section>
+        <section class="text-center space-y-6">
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
+                The "Smart Consent Gateway" is a Minimum Viable Product (MVP) designed to address the critical friction point in modern healthcare data exchange: verifiable, patient-controlled consent. Despite the proliferation of digital health data, silos and vulnerability to breaches remain prevalent, while static consent models hinder interoperability and research. Our MVP bridges this gap by introducing a secure interoperability layer atop existing Electronic Health Records (EHRs), rather than attempting to replace them.
+            </p> 
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
+                At its core, the solution leverages a <strong>permissioned Hyperledger Fabric blockchain</strong> to create an immutable, transparent audit trail of all data access requests and grants. This choice aligns with findings from research in the last two years that identify permissioned blockchains as the optimal architecture for balancing privacy, throughput, and regulatory compliance (HIPAA/GDPR) in healthcare settings. By eliminating variable "gas" fees associated with public chains, we ensure a scalable, cost-effective model for high-volume institutional use.
+            </p>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed"> 
+                A strategic differentiator of our MVP is the integration of <strong>Self-Sovereign Identity (SSI)</strong> and <strong>Decentralized Identifiers (DIDs)</strong>. This empowers patients to hold verifiable credentials in a digital wallet, granting them granular, real-time control over their data permissions—a capability proven to increase willingness to share data for research. Automated via smart contracts, this "consent-as-a-service" model reduces administrative burden for providers, mitigates legal risk through automated compliance checks, and restores data sovereignty to patients.
+            </p>
+        </section>
+        
         <!-- FOOTER -->
         <footer class="border-t border-gray-200 pt-8 pb-12 text-center text-gray-500 text-sm">
             <p>&copy; 2025 Infographic synthesized from recent academic research (Welzel, Rohini, Pham, Lacson et al.).</p>
@@ -407,15 +366,12 @@ A strategic differentiator of our MVP is the integration of <strong>Self-Soverei
 
     <!-- CHART.JS LOGIC -->
     <script>
-        // --- UTILITY: Label Wrapping Function (16 char limit) ---
         function wrapLabel(label) {
             const limit = 16;
             if (label.length <= limit) return label;
-            
             const words = label.split(' ');
             const lines = [];
             let currentLine = words[0];
-
             for (let i = 1; i < words.length; i++) {
                 if (currentLine.length + 1 + words[i].length <= limit) {
                     currentLine += ' ' + words[i];
@@ -428,11 +384,9 @@ A strategic differentiator of our MVP is the integration of <strong>Self-Soverei
             return lines;
         }
 
-        // --- GLOBAL CHART CONFIG ---
         Chart.defaults.font.family = "'Inter', sans-serif";
         Chart.defaults.color = '#64748B';
         
-        // Tooltip Callback for Multiline Labels
         const tooltipPlugin = {
             callbacks: {
                 title: function(tooltipItems) {
@@ -447,156 +401,103 @@ A strategic differentiator of our MVP is the integration of <strong>Self-Soverei
             }
         };
 
-        // --- CHART 1: RADAR CHART (Attributes) ---
-        // Justification: Radar charts are excellent for comparing two entities across multiple qualitative variables.
-        const ctxRadar = document.getElementById('radarChart').getContext('2d');
-        const radarLabels = ['HIPAA/GDPR Compliance', 'Transaction Speed', 'Cost Efficiency', 'Decentralization', 'Scalability'];
-        const processedRadarLabels = radarLabels.map(wrapLabel);
-
-        new Chart(ctxRadar, {
+        // Radar Chart
+        new Chart(document.getElementById('radarChart').getContext('2d'), {
             type: 'radar',
             data: {
-                labels: processedRadarLabels,
+                labels: ['HIPAA/GDPR Compliance', 'Transaction Speed', 'Cost Efficiency', 'Decentralization', 'Scalability'].map(wrapLabel),
                 datasets: [
                     {
                         label: 'Permissioned (Hyperledger)',
                         data: [9, 9, 9, 4, 8],
                         fill: true,
-                        backgroundColor: 'rgba(79, 70, 229, 0.2)', // Indigo
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
                         borderColor: '#4F46E5',
                         pointBackgroundColor: '#4F46E5',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#4F46E5'
                     },
                     {
                         label: 'Public (Ethereum)',
                         data: [5, 4, 3, 10, 4],
                         fill: true,
-                        backgroundColor: 'rgba(6, 182, 212, 0.2)', // Cyan
+                        backgroundColor: 'rgba(6, 182, 212, 0.2)',
                         borderColor: '#06B6D4',
                         pointBackgroundColor: '#06B6D4',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#06B6D4'
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: false,
                 scales: {
                     r: {
                         angleLines: { color: '#E2E8F0' },
                         grid: { color: '#E2E8F0' },
-                        pointLabels: {
-                            font: { size: 11, weight: '600' },
-                            color: '#1E293B'
-                        },
-                        suggestedMin: 0,
-                        suggestedMax: 10
+                        pointLabels: { font: { size: 11, weight: '600' }, color: '#1E293B' },
+                        suggestedMin: 0, suggestedMax: 10
                     }
                 },
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: tooltipPlugin
-                }
+                plugins: { legend: { position: 'bottom' }, tooltip: tooltipPlugin }
             }
         });
 
-        // --- CHART 2: BAR CHART (Throughput) ---
-        // Justification: Simple bar chart clearly shows the massive magnitude difference in TPS.
-        const ctxThroughput = document.getElementById('throughputChart').getContext('2d');
-        const tpLabels = ['Ethereum (Public)', 'Hyperledger Fabric'];
-        const processedTpLabels = tpLabels.map(wrapLabel);
-
-        new Chart(ctxThroughput, {
+        // Bar Chart
+        new Chart(document.getElementById('throughputChart').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: processedTpLabels,
+                labels: ['Ethereum (Public)', 'Hyperledger Fabric'].map(wrapLabel),
                 datasets: [{
                     label: 'Transactions Per Second (TPS)',
-                    data: [15, 3500], // Data from Lacson et al / Rohini
-                    backgroundColor: [
-                        'rgba(6, 182, 212, 0.7)', // Cyan for Eth
-                        'rgba(79, 70, 229, 0.8)'  // Indigo for HL
-                    ],
-                    borderColor: [
-                        '#06B6D4',
-                        '#4F46E5'
-                    ],
+                    data: [15, 3500],
+                    backgroundColor: ['rgba(6, 182, 212, 0.7)', 'rgba(79, 70, 229, 0.8)'],
+                    borderColor: ['#06B6D4', '#4F46E5'],
                     borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                indexAxis: 'y', // Horizontal bar for better label reading
-                animation: false,
+                indexAxis: 'y',
                 scales: {
                     x: {
                         beginAtZero: true,
-                        type: 'logarithmic', // Log scale needed due to massive difference
+                        type: 'logarithmic',
                         title: { display: true, text: 'TPS (Log Scale)' }
                     }
                 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: tooltipPlugin
-                }
+                plugins: { legend: { display: false }, tooltip: tooltipPlugin }
             }
         });
 
-        // --- CHART 3: STACKED BAR (Cost) ---
-        // Justification: Stacked bar shows composition of costs (Setup vs Operational) over time.
-        const ctxCost = document.getElementById('costChart').getContext('2d');
-        const costLabels = ['Public Blockchain', 'Permissioned Consortium'];
-        const processedCostLabels = costLabels.map(wrapLabel);
-
-        new Chart(ctxCost, {
+        // Stacked Bar Chart
+        new Chart(document.getElementById('costChart').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: processedCostLabels,
+                labels: ['Public Blockchain', 'Permissioned Consortium'].map(wrapLabel),
                 datasets: [
                     {
                         label: 'Initial Setup Cost',
-                        data: [1000, 25000], // Public is low setup, Permissioned is high setup
-                        backgroundColor: '#CBD5E1', // Gray
+                        data: [1000, 25000],
+                        backgroundColor: '#CBD5E1',
                     },
                     {
                         label: 'Transaction/Gas Fees (1M Ops)',
-                        data: [50000, 500], // Public high opex, Permissioned near zero
-                        backgroundColor: '#E11D48', // Red for high cost warning
+                        data: [50000, 500],
+                        backgroundColor: '#E11D48',
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: false,
                 scales: {
                     x: { stacked: true },
-                    y: { 
-                        stacked: true,
-                        title: { display: true, text: 'Estimated Cost ($ USD)' }
-                    }
+                    y: { stacked: true, title: { display: true, text: 'Estimated Cost ($ USD)' } }
                 },
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: tooltipPlugin
-                }
+                plugins: { legend: { position: 'bottom' }, tooltip: tooltipPlugin }
             }
         });
-
     </script>
-    
-    <!-- 
-    Data Choice Summary:
-    1. Radar Chart: Chosen to visualize the multi-dimensional trade-offs (Compliance vs Speed vs Decentralization).
-    2. Horizontal Bar (Log Scale): Chosen for TPS because the difference (15 vs 3500) is too large for a linear scale.
-    3. Stacked Bar: Chosen to highlight the difference between CapEx (Setup) and OpEx (Gas Fees).
-    -->
-
 </body>
 </html>
+
+
